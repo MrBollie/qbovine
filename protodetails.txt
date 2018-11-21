@@ -1,0 +1,61 @@
+Port 4718
+
+get /status?cmd_id=heartbeat&&message_id=0
+get /devices?flatvalue=1&commands=0&cmd_id=get_devices_subtree&propfilter=type%2Cnormalized_value%2Creal_value%2Cstring_value%2Cvalue%2Cfolder%2Cuid%2Cfolder_uid%2Cname%2Cplugin_id%2Cpreset_uid%2Cpreset_uid_dirty%2Cfavorite%2Cfactory%2Cval%2Cbank%2Ccab_knob&recursive=1&message_id=1
+subscribe /devices?recursive=1&cmd_id=subscribe_command&message_id=2
+get /presets?flatvalue=1&commands=0&cmd_id=get_presets_subtree&propfilter=type%2Cnormalized_value%2Creal_value%2Cstring_value%2Cvalue%2Cfolder%2Cuid%2Cfolder_uid%2Cname%2Cplugin_id%2Cpreset_uid%2Cpreset_uid_dirty%2Cfavorite%2Cfactory%2Cval%2Cbank%2Ccab_knob&levels=7&message_id=3
+subscribe /presets?recursive=1&cmd_id=subscribe_command&message_id=4
+subscribe /meters/meter_values/value?cmd_id=subscribe_command&message_id=5
+
+Setting Mic:
+
+get /devices/0123456789abcdef0123456789abcdef/mixers/0/buses/master/effects/0?flatvalue=1&commands=0&cmd_id=get_base_path_subtree&propfilter=type%2Cnormalized_value%2Creal_value%2Cstring_value%2Cvalue%2Cname%2Cdata&recursive=1&message_id=1
+
+post /devices/0123456789abcdef0123456789abcdef/device/inputs/cabinet_mic_room/effects/0/controls/close_mic_1/set_touch?message_id=8 {"client_uid":"89d82159-652c-4943-b8f0-0d30f053d34f","touch":true}
+set /devices/0123456789abcdef0123456789abcdef/device/inputs/cabinet_mic_room/effects/0/controls/close_mic_1/string_value/value/?cmd_id=set_command&message_id=9 "dyn_57"
+post /devices/0123456789abcdef0123456789abcdef/device/inputs/cabinet_mic_room/effects/0/controls/close_mic_1/set_touch?message_id=10 {"client_uid":"89d82159-652c-4943-b8f0-0d30f053d34f","touch":false}
+
+Port 4792
+
+get /status?cmd_id=heartbeat&message_id=0
+get /hardware/thermal?flatvalue=1&commands=0&cmd_id=cmd_id_get_all_thermal&recursive=1&message_id=1
+subscribe /hardware/thermal?recursive=1&cmd_id=cmd_id_subscribe_to_thermal&message_id=2
+get /revisions/software?flatvalue=1&commands=0&cmd_id=cmd_id_get_all_revisions&recursive=1&message_id=3
+subscribe /revisions/software?recursive=1&cmd_id=cmd_id_subscribe_to_revisions&message_id=4
+get /identity?flatvalue=1&commands=0&cmd_id=cmd_id_get_all_identity&recursive=1&message_id=5
+subscribe /identity?recursive=1&cmd_id=cmd_id_subscribe_to_identity&message_id=6
+get /update/ota?flatvalue=1&commands=0&cmd_id=cmd_id_get_all_updates&recursive=1&message_id=7
+subscribe /update/ota?recursive=1&cmd_id=cmd_id_subscribe_to_updates&message_id=8
+post /update/ota/checker_init?cmd_id=cmd_id_post_init_checker&message_id=9 {}
+get /update/ota?flatvalue=1&commands=0&cmd_id=cmd_id_get_all_updates&recursive=1&message_id=10
+
+Adding new preset folder:
+post /presets/devices/hegel/folders/new?message_id=345 {"name":"Bollie"}
+
+Changing assignment:
+set /devices/0123456789abcdef0123456789abcdef/banks/0/patches/5/preset_uid/value/?cmd_id=set_command&message_id=1318 "3d4c9671945f40129e9ef0674f221907"
+
+
+UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[0,4,5,6,7],\"values\":[0.009307168424129486,0.06519273668527603,0.09037139266729355,0.6666449904441834,0.00021727719285991043]},\"peaks\":{\"meter_indexes\":[4,5],\"values\":[0.01881502941250801,0.013139056041836739]}}}"
+UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[0,4,5,6,7],\"values\":[0.0036150452215224506,0.05963612720370293,0.08481481671333313,0.6666474938392639,0.00019090274872723967]},\"peaks\":{\"meter_indexes\":[4,5],\"values\":[0.0,0.03439890965819359]}}}"
+UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[0,4,5,6,7],\"values\":[0.0,0.05394401028752327,0.0791226401925087,0.6666499376296997,0.00016711179341655225]},\"peaks\":{\"meter_indexes\":[5],\"values\":[0.015727650374174119]}}}"
+UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,6,7],\"values\":[0.04838740453124046,0.07356604188680649,0.6666524410247803,0.00015936337877064943]},\"peaks\":{\"meter_indexes\":[5],\"values\":[0.0]}}}"
+UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,6,7],\"values\":[0.04269525781273842,0.06787387281656265,0.6666548848152161,0.00015133662964217365]}}}"
+UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,6,7],\"values\":[0.03713865578174591,0.062317270785570148,0.6666563153266907,0.00013260483683552593]}}}"
+UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,7],\"values\":[0.03144648298621178,0.0566251203417778,0.00012747469008900225]}}}"
+
+
+
+
+/**
+
+    /*
+     *
+     * #define DEVICE_INPUT_CONTROL "/devices/0123456789abcdef0123456789abcdef/device/inputs/cabinet_mic_room/effects/0/controls"
+#define DEVICE_MIXER_CONTROL "/devices/0123456789abcdef0123456789abcdef/mixers/0/channels"
+#define DEVICE_BUS_CONTROL "/devices/0123456789abcdef0123456789abcdef/mixers/0/buses"
+*/
+
+set /presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/bda47e33bb844588b5519d08f16e1f0c/name/value/?cmd_id=set_command&message_id=228 "Bollie Blackface"
+post /presets/devices/hegel/delete?message_id=373 {"uid":"a6b695e09143476cb07869e6a57f7438"}
+get /presets/devices/hegel/folders?levels=4&flatvalue=1&cmd_id=get_presets&cmd_id_param=device
