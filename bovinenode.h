@@ -15,7 +15,8 @@ public:
     BovineNode(const QJsonObject &json, BovineMap *map,
                BovineNode *parent = nullptr);
     ~BovineNode();
-    BovineNode *findNodeByPath(const QString path);
+    BovineNode *findNodeByPath(const QString &path);
+    BovineNode *findNodeByPropValue(const QString &propval);
     QString getPath() const;
 
     QVariant *getProperty(const QString &key);

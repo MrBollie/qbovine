@@ -63,13 +63,14 @@ private:
     BovineNode *devicesSubTree;
     QTimer *heartbeatTimer;
 
-    MDNSLookup mdns;
+    MDNSLookup* mdns;
 
     unsigned int msgIdConf;
     unsigned int msgIdDev;
 
     BovineMap *presetPathMap;
     BovineNode *presetsSubTree;
+    QHash<QString, BovineNode*>* uid2PresetMap;
 
     QWebSocket webSocketConf;
     QWebSocket webSocketDev;
@@ -77,11 +78,11 @@ private:
     unsigned int getMsgIdConf();
     unsigned int getMsgIdDev();
 
-
     void updateMeters(const QJsonObject &meter_values);
+
 signals:
-    void on_device_connected();
-    void on_set_level(int index, double value, double peakValue);
+    void deviceConnected();
+    void updateMeterLevel(int index, double value, double peakValue);
 };
 
 #endif // BOVINEAPI_H

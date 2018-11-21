@@ -22,7 +22,20 @@ BovineNode::~BovineNode()
     }
 }
 
-BovineNode *BovineNode::findNodeByPath(const QString path) {
+BovineNode *BovineNode::findNodeByPropValue(const QString &propval)
+{
+    foreach(QString key, properties.keys()) {
+
+        if (properties[key].toString() == propval)
+            return this;
+    }
+    foreach(BovineNode* n, children) {
+        return n->findNodeByPropValue(propval);
+    }
+    return nullptr;
+}
+
+BovineNode *BovineNode::findNodeByPath(const QString &path) {
     QString p = path;
     if (p.startsWith('/')) {
         p = p.remove(0,1);

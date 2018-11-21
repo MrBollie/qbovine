@@ -15,13 +15,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // THE API object
     api = new BovineAPI();
-    connect(api, SIGNAL(on_set_level(int, double, double)), this,
+    connect(api, SIGNAL(updateMeterLevel(int, double, double)), this,
             SLOT(on_set_level(int, double, double)));
 
-    connect(api, SIGNAL(on_device_connected()), this,
+    connect(api, SIGNAL(deviceConnected()), this,
             SLOT(on_device_connected()));
 
-    qDebug() << "DEVICE_INPUT_CONTROL";
+    api->addDevicePath("/devices/0123456789abcdef0123456789abcdef/",
+                       "preset_name", ui->leCurrentPreset, LINE_EDIT);
+
     // Cabinet
     addDevPathInput("cabinet", ui->cbCab, COMBO);
     addDevPathInput("breakup", ui->vsCabSpeakerBreakup, SLIDER);
@@ -533,11 +535,6 @@ void MainWindow::on_vsMic2Gain_valueChanged(int value)
 void MainWindow::on_hsRoomMicBalance_valueChanged(int value)
 {
     api->setSlider(ui->hsRoomMicBalance, value);
-}
-
-void MainWindow::on_vsRoomGain_valueChanged(int value)
-{
-    api->setSlider(ui->vsRoomMicGain, value);
 }
 
 void MainWindow::on_dEQMic1LCFreq_valueChanged(int value)
@@ -1217,4 +1214,9 @@ void MainWindow::on_dFXCompOutput_valueChanged(int value)
 void MainWindow::on_pbFXCompPower_toggled(bool checked)
 {
    api->setPushButton(ui->pbFXCompPower, checked);
+}
+
+void MainWindow::on_vsRoomMicGain_valueChanged(int value)
+{
+    api->setSlider(ui->vsRoomMicGain, value);
 }

@@ -240,6 +240,19 @@ void BovineMap::add(QString path, QString propertyName, QWidget *pwidget,
     widget2pathMap[pwidget] = &prop2pathMap[fproppath];
 }
 
+BovineNode* BovineMap::findByPropValue(QString &propval)
+{
+    foreach(QString key, pathMap.keys()) {
+        BovineNode* n = pathMap[key];
+        QHash<QString, QVariant> p = n->getProperties();
+        foreach(QString pkey, p.keys()) {
+            if (p[pkey].toString() == propval)
+                return n;
+        }
+    }
+    return nullptr;
+}
+
 BovineMapEntry *BovineMap::find(QString propPath)
 {
     if (!prop2pathMap.contains(propPath))

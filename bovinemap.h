@@ -56,6 +56,7 @@ public:
     void add(BovineNode *node);
     void add(BovineNode *node, QString prop);
     void add(QString path, QString prop, QWidget *pwidget, WidgetType type);
+    BovineNode* findByPropValue(QString &propval);
     BovineMapEntry* find(QString propPath);
     BovineMapEntry* find(QWidget *widget);
     void printEntries();

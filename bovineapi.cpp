@@ -14,9 +14,11 @@ BovineAPI::BovineAPI() :
     msgIdDev = 0;
     devicePathMap = new BovineMap();
     presetPathMap = new BovineMap();
+    uid2PresetMap = new QHash<QString, BovineNode*>;
+    mdns = new MDNSLookup();
 
     // Connect the callback of mdns.
-    connect(&mdns, SIGNAL(deviceFound(QStrig, uint16_t)),
+    connect(mdns, SIGNAL(deviceFound(QString, uint16_t)),
         this, SLOT(on_device_found(QString, uint16_t)));
 }
 
@@ -25,10 +27,12 @@ BovineAPI::~BovineAPI()
     webSocketConf.disconnect();
     webSocketDev.disconnect();
 
+    delete mdns;
     delete devicePathMap;
     if (devicesSubTree) delete devicesSubTree;
     delete presetPathMap;
     if (presetsSubTree) delete presetsSubTree;
+    delete uid2PresetMap;
 }
 
 
@@ -90,7 +94,7 @@ void BovineAPI::loadDevicePreset(const QString &uid)
  * 			on_device_found should be called.
  */
 void BovineAPI::connectToDevice() {
-    mdns.lookup("_hw2015._sub._uadevice._tcp");
+    mdns->lookup("_hw2015._sub._uadevice._tcp");
 }
 
 void BovineAPI::on_device_found(QString ip, uint16_t port) {
@@ -117,7 +121,7 @@ void BovineAPI::on_device_found(QString ip, uint16_t port) {
 void BovineAPI::onWSConfConnected() {
     connect(&webSocketConf, SIGNAL(textMessageReceived(const QString)), this,
             SLOT(onWSConfTextMessageReceived(const QString)));
-    emit on_device_connected();
+    emit deviceConnected();
 
     webSocketConf.sendTextMessage(
         QStringLiteral("get /status?cmd_id=heartbeat&&message_id=0")
@@ -198,13 +202,24 @@ void BovineAPI::onWSConfTextMessageReceived(const QString &message) {
              && jsonObject["parameters"].isObject()) {
         readPresetsSubtree(jsonObject);
     }
+    else if (jsonObject["path"].toString()
+          == "/devices/0123456789abcdef0123456789abcdef/preset_uid/value"
+          && jsonObject.contains("data")
+          && jsonObject["data"].isString()) {
+        QString uid = jsonObject["data"].toString();
+        qDebug() << "PRESET UID: " << uid;
+        BovineNode* n = presetPathMap->findByPropValue(uid);
+        if (n)
+            qDebug() << "PRESET NAME: " << n->getProperty("name")->toString();
+    }
     else if (jsonObject["path"].toString().startsWith("/devices/0123456789abcdef0123456789abcdef")) {
         if (!message.contains("level")) qDebug() << "Path found: " << message;
         QString path = jsonObject["path"].toString();
         if(jsonObject.contains("data")) {
             BovineMapEntry *bme = devicePathMap->find(path);
-            if (bme)
+            if (bme) {
                 bme->updateValue(jsonObject["data"].toVariant(), true);
+            }
         }
     }
     else if (jsonObject["path"].toString() == "/meters/meter_values/value") {
@@ -253,7 +268,7 @@ void BovineAPI::updateMeters(const QJsonObject &meter_values) {
                 QJsonArray lvl_values = levels["values"].toArray();
                 foreach(QJsonValue v, levels["meter_indexes"].toArray()) {
                     int idx = v.toInt();
-                    emit on_set_level(v.toInt(),
+                    emit updateMeterLevel(v.toInt(),
                                       lvl_values[idx].toDouble(),
                                       peakvals[idx]
                     );

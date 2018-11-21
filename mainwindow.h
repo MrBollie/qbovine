@@ -68,8 +68,6 @@ private slots:
 
     void on_hsRoomMicBalance_valueChanged(int value);
 
-    void on_vsRoomGain_valueChanged(int value);
-
     void on_dEQMic1LCFreq_valueChanged(int value);
 
     void on_dEQMic1LOQ_valueChanged(int value);
@@ -299,6 +297,8 @@ private slots:
     void on_dFXCompOutput_valueChanged(int value);
 
     void on_pbFXCompPower_toggled(bool checked);
+
+    void on_vsRoomMicGain_valueChanged(int value);
 
 private:
     void addDevPathInput(const QString &control, QWidget *widget,

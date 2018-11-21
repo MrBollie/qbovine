@@ -36,7 +36,8 @@ SOURCES += \
     bovinenode.cpp \
     mdnslookup.cpp \
     bovinemap.cpp \
-    dialogname.cpp
+    dialogname.cpp \
+    presetmap.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -46,7 +47,8 @@ HEADERS += \
     bovinenode.h \
     mdnslookup.h \
     bovinemap.h \
-    dialogname.h
+    dialogname.h \
+    presetmap.h
 
 FORMS += \
         mainwindow.ui \
