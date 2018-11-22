@@ -13,7 +13,7 @@ DialogPresets::DialogPresets(QWidget *parent, BovineAPI *api) :
     BovineNode *pre_folders = api->getDevicePresetFolders();
 
     if (pre_folders != nullptr) {
-        foreach(BovineNode* n, pre_folders->getChildren()) {
+        foreach(BovineNode* n, *pre_folders->getChildren()) {
             QListWidgetItem *item = new QListWidgetItem(n->getProperty("name")->toString());
             item->setData(Qt::UserRole, n->getPath());
             ui->lwFolder->addItem(item);
@@ -65,7 +65,7 @@ void DialogPresets::on_lwFolder_itemClicked(QListWidgetItem *item)
     }
 
     if (node != nullptr) {
-        foreach(BovineNode* n, node->getChildren()) {
+        foreach(BovineNode* n, *node->getChildren()) {
             QListWidgetItem *pres_item = new QListWidgetItem(
                         n->getProperty("name")->toString()
             );

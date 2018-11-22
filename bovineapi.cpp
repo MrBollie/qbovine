@@ -5,9 +5,7 @@
 
 
 BovineAPI::BovineAPI() :
-    devicesSubTree(nullptr),
-    heartbeatTimer(nullptr),
-    presetsSubTree(nullptr)
+    heartbeatTimer(nullptr)
 {
     client_uid = QUuid::createUuid();
     msgIdConf = 2000;
@@ -29,9 +27,7 @@ BovineAPI::~BovineAPI()
 
     delete mdns;
     delete devicePathMap;
-    if (devicesSubTree) delete devicesSubTree;
     delete presetPathMap;
-    if (presetsSubTree) delete presetsSubTree;
     delete uid2PresetMap;
 }
 
@@ -377,8 +373,14 @@ void BovineAPI::addDevicePath(QString path, QString propertyName,
  */
 bool BovineAPI::readDevicesSubtree(QJsonObject &obj)
 {
-    devicesSubTree = new BovineNode(obj, devicePathMap);
-    devicePathMap->updateUI();
+    if (obj.contains("parameters") && obj["parameters"].isObject()) {
+        QJsonObject para = obj["parameters"].toObject();
+        if (para.contains("cmd_id") && para["cmd_id"].isString()
+                && para["cmd_id"] == "get_devices_subtree") {
+            devicePathMap->readInitialTree(obj);
+            devicePathMap->updateUI();
+        }
+    }
     return true;
 }
 
@@ -393,7 +395,14 @@ bool BovineAPI::readDevicesSubtree(QJsonObject &obj)
  */
 bool BovineAPI::readPresetsSubtree(QJsonObject &obj)
 {
-    presetsSubTree = new BovineNode(obj, presetPathMap);
+    if (obj.contains("parameters") && obj["parameters"].isObject()) {
+        QJsonObject para = obj["parameters"].toObject();
+        if (para.contains("cmd_id") && para["cmd_id"].isString()
+                && para["cmd_id"] == "get_presets_subtree") {
+            presetPathMap->readInitialTree(obj);
+            presetPathMap->updateUI();
+        }
+    }
     return true;
 }
 

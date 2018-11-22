@@ -245,9 +245,9 @@ BovineNode* BovineMap::findByPropValue(QString &propval)
 {
     foreach(QString key, pathMap.keys()) {
         BovineNode* n = pathMap[key];
-        QHash<QString, QVariant> p = n->getProperties();
-        foreach(QString pkey, p.keys()) {
-            if (p[pkey].toString() == propval)
+        QHash<QString, QVariant>* p = n->getProperties();
+        foreach(QString pkey, p->keys()) {
+            if ((*p)[pkey].toString() == propval)
                 return n;
         }
     }

@@ -60,7 +60,6 @@ private:
     QUuid client_uid;
 
     BovineMap *devicePathMap;
-    BovineNode *devicesSubTree;
     QTimer *heartbeatTimer;
 
     MDNSLookup* mdns;
@@ -69,7 +68,6 @@ private:
     unsigned int msgIdDev;
 
     BovineMap *presetPathMap;
-    BovineNode *presetsSubTree;
     QHash<QString, BovineNode*>* uid2PresetMap;
 
     QWebSocket webSocketConf;

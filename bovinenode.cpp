@@ -5,11 +5,14 @@
 
 BovineNode::BovineNode()
 {
-
+    properties = new QHash<QString, QVariant>;
+    children = new QVector<BovineNode*>;
 }
 
 BovineNode::BovineNode(const QJsonObject &json, BovineMap *map,
                        BovineNode *parent) {
+    properties = new QHash<QString, QVariant>;
+    children = new QVector<BovineNode*>;
     this->parent = parent;
     this->pathMap = map;
     parseJSON(json);
@@ -17,19 +20,21 @@ BovineNode::BovineNode(const QJsonObject &json, BovineMap *map,
 
 BovineNode::~BovineNode()
 {
-    foreach(BovineNode* pn, children) {
+    delete properties;
+    foreach(BovineNode* pn, *children) {
         delete pn;
     }
+    delete children;
 }
 
 BovineNode *BovineNode::findNodeByPropValue(const QString &propval)
 {
-    foreach(QString key, properties.keys()) {
+    foreach(QString key, properties->keys()) {
 
-        if (properties[key].toString() == propval)
+        if ((*properties)[key].toString() == propval)
             return this;
     }
-    foreach(BovineNode* n, children) {
+    foreach(BovineNode* n, *children) {
         return n->findNodeByPropValue(propval);
     }
     return nullptr;
@@ -48,8 +53,9 @@ BovineNode *BovineNode::findNodeByPath(const QString &path) {
                 return this;
             }
             else {
-                for (int i = 0 ; i < children.size() ; ++i) {
-                    BovineNode *res = children[i]->findNodeByPath(list.join("/"));
+                for (int i = 0 ; i < children->size() ; ++i) {
+                    BovineNode *res = (*children)[i]->findNodeByPath(
+                                list.join("/"));
                     if (res)
                         return res;
                 }
@@ -69,8 +75,8 @@ QString BovineNode::getPath() const
 void BovineNode::parseJSON(const QJsonObject &json) {
 
     // Clear first
-    children.clear();
-    properties.clear();
+    children->clear();
+    properties->clear();
 
     if (json.contains("path") && json["path"].isString()) {
         path = json["path"].toString();
@@ -89,7 +95,7 @@ void BovineNode::parseJSON(const QJsonObject &json) {
         if (obj.contains("properties") && obj["properties"].isObject()) {
             QJsonObject props = obj["properties"].toObject();
             foreach(QString key, props.keys()) {
-                properties.insert(key, props.value(key).toVariant());
+                properties->insert(key, props.value(key).toVariant());
                 pathMap->add(this, key);
             }
         }
@@ -100,21 +106,21 @@ void BovineNode::parseJSON(const QJsonObject &json) {
         if (obj.contains("children") && obj["children"].isArray()) {
             foreach(QJsonValue v, obj["children"].toArray()) {
                 BovineNode *pn = new BovineNode(v.toObject(), pathMap, this);
-                children.append(pn);
+                children->append(pn);
             }
         }
     }
 }
 
 QVariant *BovineNode::getProperty(const QString &key) {
-    if (properties.contains(key)) {
-        return &properties[key];
+    if (properties->contains(key)) {
+        return &(*properties)[key];
     }
     return nullptr;
 
 }
 
-QVector<BovineNode*> BovineNode::getChildren() const
+QVector<BovineNode*>* BovineNode::getChildren() const
 {
     return children;
 }
@@ -129,12 +135,12 @@ void BovineNode::setFullPath(const QString &value)
     fullPath = value;
 }
 
-QHash<QString, QVariant> BovineNode::getProperties() const
+QHash<QString, QVariant>* BovineNode::getProperties() const
 {
     return properties;
 }
 
 void BovineNode::setProperty(QString name, QVariant val)
 {
-    properties[name] = val;
+    (*properties)[name] = val;
 }
