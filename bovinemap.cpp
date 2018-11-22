@@ -182,7 +182,8 @@ void BovineMapEntry::setPath(const QString &value)
  * Bovine Map
  */
 
-BovineMap::BovineMap()
+BovineMap::BovineMap() :
+    rootNode(nullptr)
 {
 }
 
@@ -274,6 +275,21 @@ void BovineMap::printEntries()
     qDebug() << "widget2pathmap contains " << widget2pathMap.size() << " entries.";
 }
 
+/**
+ * @brief BovineMap::readInitialTree
+ * @param obj
+ * @details Builds the node tree
+ */
+void BovineMap::readInitialTree(const QJsonObject &obj)
+{
+    if (rootNode) delete rootNode;
+    rootNode = new BovineNode(obj, this);
+}
+
+/**
+ * @brief BovineMap::updateUI
+ * @details Builds the widget2pathmap
+ */
 void BovineMap::updateUI()
 {
     foreach(QWidget *w, widget2pathMap.keys()) {

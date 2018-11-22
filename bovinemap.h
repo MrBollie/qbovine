@@ -60,9 +60,11 @@ public:
     BovineMapEntry* find(QString propPath);
     BovineMapEntry* find(QWidget *widget);
     void printEntries();
+    void readInitialTree(const QJsonObject &obj);
     void updateUI();
 
 private:
+    BovineNode* rootNode;
     QHash<QString, BovineNode*> pathMap;
     QHash<QWidget*, BovineMapEntry*> widget2pathMap;
     QHash<QString, BovineMapEntry> prop2pathMap;
