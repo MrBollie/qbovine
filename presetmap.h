@@ -1,10 +1,10 @@
 #ifndef PRESETMAP_H
 #define PRESETMAP_H
 
-#include "bovinemap.h"
+#include "devicetree.h"
 
 
-class PresetMap : public BovineMap
+class PresetMap : public DeviceTree
 {
 public:
     PresetMap();

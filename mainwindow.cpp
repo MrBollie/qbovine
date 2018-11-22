@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(api, SIGNAL(deviceConnected()), this,
             SLOT(on_device_connected()));
 
+    connect(api, SIGNAL(updateWidget(QWidget*, WidgetType, QVariant*)), this,
+            SLOT(on_update_widget(QWidget*, WidgetType, QVariant*)));
+
     api->addDevicePath("/devices/0123456789abcdef0123456789abcdef/",
                        "preset_name", ui->leCurrentPreset, LINE_EDIT);
 
@@ -1219,4 +1222,60 @@ void MainWindow::on_pbFXCompPower_toggled(bool checked)
 void MainWindow::on_vsRoomMicGain_valueChanged(int value)
 {
     api->setSlider(ui->vsRoomMicGain, value);
+}
+
+
+/**
+ * @brief MainWindow::on_update_widget
+ * @param widget pointer to the widget
+ * @param wtype type of the widget
+ * @details callback for the API if changes to widgets have to happen
+ */
+void MainWindow::on_update_widget(QWidget* widget, WidgetType wtype,
+                                  QVariant *val) {
+    // Ignore if there's no value
+    if (val == nullptr)
+        return;
+
+    switch(wtype) {
+        case COMBO: {
+            QString v = val->toString();
+            QComboBox *cb = (QComboBox*)widget;
+            cb->blockSignals(true);
+            cb->setCurrentIndex(cb->findData(v));
+            cb->blockSignals(false);
+            break;
+        }
+        case DIAL: {
+            QDial *ps = (QDial*)widget;
+            ps->blockSignals(true);
+            double v = val->toDouble();
+            ps->setValue((int)(v*100.));
+            ps->blockSignals(false);
+            break;
+        }
+        case SLIDER: {
+            QSlider *ps = (QSlider*)widget;
+            ps->blockSignals(true);
+            double v = val->toDouble();
+            ps->setValue((int)(v*100.));
+            ps->blockSignals(false);
+            break;
+        }
+        case PUSH_BUTTON: {
+            QPushButton *pb = (QPushButton*)widget;
+            pb->blockSignals(true);
+            int v = val->toInt();
+            pb->setChecked(v == 1);
+            pb->blockSignals(false);
+            break;
+        }
+        case LINE_EDIT: {
+            QLineEdit *pb = (QLineEdit*)widget;
+            pb->blockSignals(true);
+            pb->setText(val->toString());
+            pb->blockSignals(false);
+            break;
+        }
+    }
 }

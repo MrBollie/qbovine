@@ -11,7 +11,7 @@
 #include <QPushButton>
 #include <QSlider>
 
-#include "bovinemap.h"
+#include "devicetree.h"
 #include "mdnslookup.h"
 
 
@@ -33,10 +33,8 @@ public:
     BovineNode *getDevicePresets(const QString &folderUID);
 
     void loadDevicePreset(const QString &uid);
-    bool readDevicesSubtree(QJsonObject &obj);
-    bool readPresetsSubtree(QJsonObject &obj);
-    BovineMap *getPresetPathMap() const;
-    BovineMap *getDevicePathMap() const;
+    DeviceTree *getPresetPathMap() const;
+    DeviceTree *getDevicePathMap() const;
     void selectComboBox(QComboBox *cb, int index);
     void setPushButton(QPushButton *pb, bool checked);
     void setSlider(QSlider *sl, int value);
@@ -59,7 +57,7 @@ private slots:
 private:
     QUuid client_uid;
 
-    BovineMap *devicePathMap;
+    DeviceTree *devicePathMap;
     QTimer *heartbeatTimer;
 
     MDNSLookup* mdns;
@@ -67,7 +65,7 @@ private:
     unsigned int msgIdConf;
     unsigned int msgIdDev;
 
-    BovineMap *presetPathMap;
+    DeviceTree *presetPathMap;
     QHash<QString, BovineNode*>* uid2PresetMap;
 
     QWebSocket webSocketConf;
@@ -76,11 +74,14 @@ private:
     unsigned int getMsgIdConf();
     unsigned int getMsgIdDev();
 
-    void updateMeters(const QJsonObject &meter_values);
+    bool parseDevicePath(QJsonObject &obj);
+    bool parsePresetPath(QJsonObject &obj);
+    void parseMeters(const QJsonObject &meter_values);
 
 signals:
     void deviceConnected();
     void updateMeterLevel(int index, double value, double peakValue);
+    void updateWidget(QWidget *widget, WidgetType wtype, QVariant *val);
 };
 
 #endif // BOVINEAPI_H

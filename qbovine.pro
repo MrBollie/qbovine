@@ -35,9 +35,12 @@ SOURCES += \
     bovineapi.cpp \
     bovinenode.cpp \
     mdnslookup.cpp \
-    bovinemap.cpp \
     dialogname.cpp \
-    presetmap.cpp
+    presetmap.cpp \
+    devicetree.cpp \
+    bovinenodemapping.cpp \
+    devicenodemapping.cpp \
+    bovinetree.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -46,9 +49,12 @@ HEADERS += \
     bovineapi.h \
     bovinenode.h \
     mdnslookup.h \
-    bovinemap.h \
     dialogname.h \
-    presetmap.h
+    presetmap.h \
+    devicetree.h \
+    bovinenodemapping.h \
+    devicenodemapping.h \
+    bovinetree.h
 
 FORMS += \
         mainwindow.ui \

@@ -300,6 +300,7 @@ private slots:
 
     void on_vsRoomMicGain_valueChanged(int value);
 
+    void on_update_widget(QWidget *widget, WidgetType wtype, QVariant *val);
 private:
     void addDevPathInput(const QString &control, QWidget *widget,
                          WidgetType wtype);

@@ -6,13 +6,13 @@
 #include <QJsonObject>
 #include <QVariant>
 
-class BovineMap;
+class BovineTree;
 
 class BovineNode
 {
 public:
     BovineNode();
-    BovineNode(const QJsonObject &json, BovineMap *map,
+    BovineNode(const QJsonObject &json, BovineTree *map,
                BovineNode *parent = nullptr);
     ~BovineNode();
     BovineNode *findNodeByPath(const QString &path);
@@ -30,7 +30,7 @@ public:
     void setProperty(QString name, QVariant val);
 
 private:
-    BovineMap *pathMap;
+    BovineTree *pathMap;
     BovineNode *parent;
     QVector<BovineNode*>* children;
     QString path;

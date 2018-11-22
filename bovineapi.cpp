@@ -10,8 +10,8 @@ BovineAPI::BovineAPI() :
     client_uid = QUuid::createUuid();
     msgIdConf = 2000;
     msgIdDev = 0;
-    devicePathMap = new BovineMap();
-    presetPathMap = new BovineMap();
+    devicePathMap = new DeviceTree();
+    presetPathMap = new DeviceTree();
     uid2PresetMap = new QHash<QString, BovineNode*>;
     mdns = new MDNSLookup();
 
@@ -38,7 +38,7 @@ BovineAPI::~BovineAPI()
  */
 BovineNode *BovineAPI::getDevicePresetFolders()
 {
-    BovineMapEntry *pme = presetPathMap->find(
+    DeviceNodeMapping *pme = presetPathMap->find(
                 "/presets/devices/hegel/folders/type/value");
     if (pme != nullptr)
         return pme->getNode();
@@ -55,7 +55,7 @@ BovineNode *BovineAPI::getDevicePresetFolders()
  */
 BovineNode *BovineAPI::getDevicePresets(const QString &folderUID)
 {
-    BovineMapEntry *pme = presetPathMap->find(
+    DeviceNodeMapping *pme = presetPathMap->find(
         QString("/presets/devices/hegel/folders/%1/presets/type/value").arg(
             folderUID
         )
@@ -190,15 +190,7 @@ void BovineAPI::onWSConfTextMessageReceived(const QString &message) {
     QJsonObject jsonObject = jsonResponse.object();
 
     // Initial device list
-    if (jsonObject["path"].toString() == "/devices"
-            && jsonObject["parameters"].isObject()) {
-        readDevicesSubtree(jsonObject);
-    }
-    else if (jsonObject["path"].toString() == "/presets"
-             && jsonObject["parameters"].isObject()) {
-        readPresetsSubtree(jsonObject);
-    }
-    else if (jsonObject["path"].toString()
+    if (jsonObject["path"].toString()
           == "/devices/0123456789abcdef0123456789abcdef/preset_uid/value"
           && jsonObject.contains("data")
           && jsonObject["data"].isString()) {
@@ -208,18 +200,15 @@ void BovineAPI::onWSConfTextMessageReceived(const QString &message) {
         if (n)
             qDebug() << "PRESET NAME: " << n->getProperty("name")->toString();
     }
-    else if (jsonObject["path"].toString().startsWith("/devices/0123456789abcdef0123456789abcdef")) {
-        if (!message.contains("level")) qDebug() << "Path found: " << message;
-        QString path = jsonObject["path"].toString();
-        if(jsonObject.contains("data")) {
-            BovineMapEntry *bme = devicePathMap->find(path);
-            if (bme) {
-                bme->updateValue(jsonObject["data"].toVariant(), true);
-            }
-        }
+    else if (jsonObject["path"].toString() == "/devices") {
+        parseDevicePath(jsonObject);
+    }
+    else if (jsonObject["path"].toString() == "/presets"
+             && jsonObject["parameters"].isObject()) {
+        parsePresetPath(jsonObject);
     }
     else if (jsonObject["path"].toString() == "/meters/meter_values/value") {
-        updateMeters(jsonObject);
+        parseMeters(jsonObject);
     }
     else {
         qDebug() << "UNHANDLED RESPONSE: " << message;
@@ -229,12 +218,12 @@ void BovineAPI::onWSConfTextMessageReceived(const QString &message) {
 
 
 /**
- * @brief BovineAPI::updateMeters
+ * @brief BovineAPI::parseMeters
  * @param meter_values
  * @details Helper function to update the meters. Emits on_set_level for
  * the UI to update itself.
  */
-void BovineAPI::updateMeters(const QJsonObject &meter_values) {
+void BovineAPI::parseMeters(const QJsonObject &meter_values) {
     if (meter_values.contains("data")) {
         QJsonObject data = meter_values["data"].toObject();
         double peakvals[6] = {0, 0, 0, 0, 0, 0};
@@ -320,12 +309,12 @@ void BovineAPI::onWSDevTextMessageReceived(const QString &message) {
 
 
 
-BovineMap *BovineAPI::getPresetPathMap() const
+DeviceTree *BovineAPI::getPresetPathMap() const
 {
     return presetPathMap;
 }
 
-BovineMap *BovineAPI::getDevicePathMap() const
+DeviceTree *BovineAPI::getDevicePathMap() const
 {
     return devicePathMap;
 }
@@ -364,21 +353,43 @@ void BovineAPI::addDevicePath(QString path, QString propertyName,
 
 
 /**
- * @brief BovineAPI::readDevicesSubtree
+ * @brief BovineAPI::parseDevicePath
  * @param obj JSON object to be parsed
  * @return true if it worked
- * @details recursively creates the device tree we receive initially from
- * the device.
+ * @details Takes care about everything related to the device tree
  * @todo Remove bool return value
  */
-bool BovineAPI::readDevicesSubtree(QJsonObject &obj)
+bool BovineAPI::parseDevicePath(QJsonObject &obj)
 {
     if (obj.contains("parameters") && obj["parameters"].isObject()) {
         QJsonObject para = obj["parameters"].toObject();
         if (para.contains("cmd_id") && para["cmd_id"].isString()
                 && para["cmd_id"] == "get_devices_subtree") {
             devicePathMap->readInitialTree(obj);
-            devicePathMap->updateUI();
+
+            // Now we need some initial status in our frontend.
+            QHash<QWidget*, DeviceNodeMapping*> wmaps =
+                    devicePathMap->getWidget2pathMap();
+            foreach(QWidget* w, wmaps.keys()) {
+                emit updateWidget(w, wmaps[w]->getWtype(),
+                                  wmaps[w]->getValue());
+            }
+        }
+    }
+    else if (obj["path"].toString().startsWith(
+                 "/devices/0123456789abcdef0123456789abcdef")) {
+        QString path = obj["path"].toString();
+        if(obj.contains("data")) {
+            DeviceNodeMapping *bme = devicePathMap->find(path);
+            if (bme) {
+                bme->updateValue(obj["data"].toVariant());
+                QWidget* w = bme->getWidget();
+                // Tell the UI to update its stuff
+                if (w) {
+                    WidgetType wt = bme->getWtype();
+                    emit updateWidget(w, wt, bme->getValue());
+                }
+            }
         }
     }
     return true;
@@ -386,21 +397,20 @@ bool BovineAPI::readDevicesSubtree(QJsonObject &obj)
 
 
 /**
- * @brief BovineAPI::readPresetsSubtree
+ * @brief BovineAPI::parsePresetPath
  * @param obj JSON object to be parsed
  * @return true if it worked
  * @details recursively creates the preset tree we receive initially from
  * the device.
  * @todo Remove bool return value
  */
-bool BovineAPI::readPresetsSubtree(QJsonObject &obj)
+bool BovineAPI::parsePresetPath(QJsonObject &obj)
 {
     if (obj.contains("parameters") && obj["parameters"].isObject()) {
         QJsonObject para = obj["parameters"].toObject();
         if (para.contains("cmd_id") && para["cmd_id"].isString()
                 && para["cmd_id"] == "get_presets_subtree") {
             presetPathMap->readInitialTree(obj);
-            presetPathMap->updateUI();
         }
     }
     return true;
@@ -415,7 +425,7 @@ bool BovineAPI::readPresetsSubtree(QJsonObject &obj)
  * websocket.
  */
 void BovineAPI::selectComboBox(QComboBox* cb, int index) {
-    BovineMapEntry *pme = devicePathMap->find(cb);
+    DeviceNodeMapping *pme = devicePathMap->find(cb);
     if (!pme)
         return;
 
@@ -459,7 +469,7 @@ void BovineAPI::selectComboBox(QComboBox* cb, int index) {
  * This does a reverse lookup of the path and sends the command via websocket.
  */
 void BovineAPI::setPushButton(QPushButton* pb, bool checked) {
-    BovineMapEntry *pme = devicePathMap->find(pb);
+    DeviceNodeMapping *pme = devicePathMap->find(pb);
     if (!pme)
         return;
 
@@ -492,7 +502,7 @@ void BovineAPI::setPushButton(QPushButton* pb, bool checked) {
  * This does a reverse lookup of the path and sends the command via websocket.
  */
 void BovineAPI::setSlider(QSlider* sl, int value) {
-    BovineMapEntry *pme = devicePathMap->find(sl);
+    DeviceNodeMapping *pme = devicePathMap->find(sl);
     if (!pme)
         return;
 
@@ -528,7 +538,7 @@ void BovineAPI::setSlider(QSlider* sl, int value) {
  */
 void BovineAPI::setDial(QDial *dial, int value)
 {
-    BovineMapEntry *pme = devicePathMap->find(dial);
+    DeviceNodeMapping *pme = devicePathMap->find(dial);
     if (!pme)
         return;
 

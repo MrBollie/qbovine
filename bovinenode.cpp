@@ -1,5 +1,5 @@
 #include "bovinenode.h"
-#include "bovinemap.h"
+#include "bovinetree.h"
 #include <QJsonArray>
 #include <QDebug>
 
@@ -9,7 +9,7 @@ BovineNode::BovineNode()
     children = new QVector<BovineNode*>;
 }
 
-BovineNode::BovineNode(const QJsonObject &json, BovineMap *map,
+BovineNode::BovineNode(const QJsonObject &json, BovineTree *map,
                        BovineNode *parent) {
     properties = new QHash<QString, QVariant>;
     children = new QVector<BovineNode*>;
