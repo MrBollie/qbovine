@@ -18,47 +18,12 @@ DeviceTree::DeviceTree() :
 {
 }
 
-/**
- * @brief DeviceTree::add
- * @param node Actual node of the tree containing the properties
- * @param key the key of the property
- * @param value the current value of the property
- *
- * This actually adds properties to the pathmap,
- * even though they aren't really branches of a tree. What an
- * inconsistency. We even need to append "/value". *sighs*
- */
-void DeviceTree::add(BovineNode *node, QString key)
-{
-    QString fpath = node->getFullPath();
-    pathMap[fpath] = node;
-
-    QString fproppath = fpath + "/" + key + "/value";
-    if (prop2pathMap.contains(fproppath)) {
-        prop2pathMap[fproppath].setNode(node);
-        prop2pathMap[fproppath].setPropName(key);
-    }
-    else {
-        prop2pathMap.insert(fproppath, DeviceNodeMapping(node, key));
-    }
-}
 
 void DeviceTree::add(QString path, QString propertyName, QWidget *pwidget,
                 WidgetType type)
 {
-    QString fproppath = path + "/" + propertyName + "/value";
-    if (prop2pathMap.contains(fproppath)) {
-        DeviceNodeMapping *pe = &prop2pathMap[fproppath];
-        pe->setPath(path);
-        pe->setPropName(propertyName);
-        pe->setWidget(pwidget);
-        pe->setWtype(type);
-    }
-    else {
-        DeviceNodeMapping me = DeviceNodeMapping(path, propertyName, pwidget, type);
-        prop2pathMap.insert(fproppath, me);
-    }
-    widget2pathMap[pwidget] = &prop2pathMap[fproppath];
+    BovineNodeMapping *pme = BovineTree::add(path, propertyName, (void*)nullptr);
+    widget2pathMap[pwidget] = pme;
 }
 
 BovineNode* DeviceTree::findByPropValue(QString &propval)

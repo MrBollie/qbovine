@@ -38,7 +38,7 @@ BovineAPI::~BovineAPI()
  */
 BovineNode *BovineAPI::getDevicePresetFolders()
 {
-    DeviceNodeMapping *pme = presetPathMap->find(
+    BovineNodeMapping *pme = presetPathMap->find(
                 "/presets/devices/hegel/folders/type/value");
     if (pme != nullptr)
         return pme->getNode();
@@ -55,7 +55,7 @@ BovineNode *BovineAPI::getDevicePresetFolders()
  */
 BovineNode *BovineAPI::getDevicePresets(const QString &folderUID)
 {
-    DeviceNodeMapping *pme = presetPathMap->find(
+    BovineNodeMapping *pme = presetPathMap->find(
         QString("/presets/devices/hegel/folders/%1/presets/type/value").arg(
             folderUID
         )
@@ -368,7 +368,7 @@ bool BovineAPI::parseDevicePath(QJsonObject &obj)
             devicePathMap->readInitialTree(obj);
 
             // Now we need some initial status in our frontend.
-            QHash<QWidget*, DeviceNodeMapping*> wmaps =
+            QHash<QWidget*, BovineNodeMapping*> wmaps =
                     devicePathMap->getWidget2pathMap();
             foreach(QWidget* w, wmaps.keys()) {
                 emit updateWidget(w, wmaps[w]->getWtype(),
@@ -380,7 +380,7 @@ bool BovineAPI::parseDevicePath(QJsonObject &obj)
                  "/devices/0123456789abcdef0123456789abcdef")) {
         QString path = obj["path"].toString();
         if(obj.contains("data")) {
-            DeviceNodeMapping *bme = devicePathMap->find(path);
+            BovineNodeMapping *bme = devicePathMap->find(path);
             if (bme) {
                 bme->updateValue(obj["data"].toVariant());
                 QWidget* w = bme->getWidget();
@@ -425,7 +425,7 @@ bool BovineAPI::parsePresetPath(QJsonObject &obj)
  * websocket.
  */
 void BovineAPI::selectComboBox(QComboBox* cb, int index) {
-    DeviceNodeMapping *pme = devicePathMap->find(cb);
+    BovineNodeMapping *pme = devicePathMap->find(cb);
     if (!pme)
         return;
 
@@ -469,7 +469,7 @@ void BovineAPI::selectComboBox(QComboBox* cb, int index) {
  * This does a reverse lookup of the path and sends the command via websocket.
  */
 void BovineAPI::setPushButton(QPushButton* pb, bool checked) {
-    DeviceNodeMapping *pme = devicePathMap->find(pb);
+    BovineNodeMapping *pme = devicePathMap->find(pb);
     if (!pme)
         return;
 

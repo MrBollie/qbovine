@@ -12,6 +12,8 @@ public:
     BovineTree();
     void add(BovineNode *node);
     void add(BovineNode *node, QString prop);
+    BovineNodeMapping* add(const QString &path, const QString &prop,
+                           void *userdata);
 
     void readInitialTree(const QJsonObject &obj);
 

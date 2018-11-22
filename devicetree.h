@@ -2,7 +2,15 @@
 #define BOVINEMAP_H
 
 #include "bovinetree.h"
-#include "devicenodemapping.h"
+
+typedef enum __WidgetType {
+    COMBO,
+    DIAL,
+    RADIO,
+    PUSH_BUTTON,
+    SLIDER,
+    LINE_EDIT
+} WidgetType;
 
 class DeviceTree : public BovineTree {
 public:
@@ -11,15 +19,14 @@ public:
     void add(BovineNode *node, QString key);
     void add(QString path, QString prop, QWidget *pwidget, WidgetType type);
     BovineNode* findByPropValue(QString &propval);
-    DeviceNodeMapping* find(QString propPath);
-    DeviceNodeMapping* find(QWidget *widget);
+    BovineNodeMapping* find(QString propPath);
+    BovineNodeMapping* find(QWidget *widget);
     void printEntries();
 
-    QHash<QWidget *, DeviceNodeMapping *> getWidget2pathMap() const;
+    QHash<QWidget *, BovineNodeMapping *> getWidget2pathMap() const;
 
 private:
-    QHash<QWidget*, DeviceNodeMapping*> widget2pathMap;
-    QHash<QString, DeviceNodeMapping> prop2pathMap;
+    QHash<QWidget*, BovineNodeMapping*> widget2pathMap;
 };
 
 #endif // BOVINEMAP_H

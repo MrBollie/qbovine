@@ -144,3 +144,13 @@ void BovineNode::setProperty(QString name, QVariant val)
 {
     (*properties)[name] = val;
 }
+
+void *BovineNode::getUserdata() const
+{
+    return userdata;
+}
+
+void BovineNode::setUserdata(void *value)
+{
+    userdata = value;
+}

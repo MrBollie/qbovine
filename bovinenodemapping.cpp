@@ -1,15 +1,19 @@
 #include "bovinenodemapping.h"
 
-BovineNodeMapping::BovineNodeMapping()
+BovineNodeMapping::BovineNodeMapping() :
+    userdata(nullptr)
 {
 
 }
 
-BovineNodeMapping::BovineNodeMapping(const QString &path, const QString &propname) :
+BovineNodeMapping::BovineNodeMapping(const QString &path,
+                                     const QString &propname,
+                                     void *userdata) :
     node(nullptr)
 {
     this->path = path;
     this->propName = propname;
+    this->userdata = userdata;
 }
 
 BovineNodeMapping::BovineNodeMapping(BovineNode *node, QString propName) {
@@ -65,4 +69,14 @@ void BovineNodeMapping::updateValue(QVariant val)
 {
     // Update value in node tree
     if (node != nullptr) node->setProperty(propName, val);
+}
+
+void *BovineNodeMapping::getUserdata() const
+{
+    return userdata;
+}
+
+void BovineNodeMapping::setUserdata(void *value)
+{
+    userdata = value;
 }

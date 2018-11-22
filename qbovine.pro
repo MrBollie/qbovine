@@ -39,7 +39,6 @@ SOURCES += \
     presetmap.cpp \
     devicetree.cpp \
     bovinenodemapping.cpp \
-    devicenodemapping.cpp \
     bovinetree.cpp
 
 HEADERS += \
@@ -53,7 +52,6 @@ HEADERS += \
     presetmap.h \
     devicetree.h \
     bovinenodemapping.h \
-    devicenodemapping.h \
     bovinetree.h
 
 FORMS += \

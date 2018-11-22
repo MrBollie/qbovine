@@ -29,6 +29,32 @@ void BovineTree::add(BovineNode *node, QString key)
 }
 
 /**
+ * @brief BovineTree::add
+ * @param path
+ * @param propertyName
+ * @param userdata
+ */
+BovineNodeMapping* BovineTree::add(const QString &path,
+                                   const QString &propertyName,
+                                   void *userdata)
+{
+    BovineNodeMapping *pe = nullptr;
+    QString fproppath = path + "/" + propertyName + "/value";
+    if (prop2pathMap.contains(fproppath)) {
+        pe = &prop2pathMap[fproppath];
+        pe->setPath(path);
+        pe->setPropName(propertyName);
+        pe->setUserdata(userdata);
+    }
+    else {
+        BovineNodeMapping me = BovineNodeMapping(path, propertyName, userdata);
+        prop2pathMap.insert(fproppath, me);
+        pe = &me;
+    }
+    return pe;
+}
+
+/**
  * @brief BovineMap::readInitialTree
  * @param obj
  * @details Builds the node tree

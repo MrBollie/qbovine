@@ -8,7 +8,8 @@ class BovineNodeMapping
 {
 public:
     BovineNodeMapping();
-    BovineNodeMapping(const QString &path, const QString &propname);
+    BovineNodeMapping(const QString &path, const QString &propname,
+                      void* userdata = nullptr);
     BovineNodeMapping(BovineNode *node, QString propName);
 
     BovineNode *getNode() const;
@@ -22,10 +23,14 @@ public:
 
     QVariant *getValue();
     void updateValue(QVariant val);
+    void *getUserdata() const;
+    void setUserdata(void *value);
+
 private:
     BovineNode *node;
     QString path;
     QString propName;
+    void *userdata;
 };
 
 #endif // TREEENTRY_H
