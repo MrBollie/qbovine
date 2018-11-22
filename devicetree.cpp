@@ -18,11 +18,31 @@ DeviceTree::DeviceTree() :
 {
 }
 
+DeviceTree::~DeviceTree() {
+    foreach(QWidget* w, widget2pathMap.keys()) {
+        BovineNodeMapping* nm = widget2pathMap[w];
+        if (nm != nullptr) {
+            WidgetContainer* wc = (WidgetContainer*)nm->getUserdata();
+            if (wc != nullptr)
+                delete wc;
+        }
+    }
+}
 
+
+/**
+ * @brief DeviceTree::add
+ * @param path
+ * @param propertyName
+ * @param pwidget
+ * @param type
+ * @details Adding a widget mapping to the device tree.
+ */
 void DeviceTree::add(QString path, QString propertyName, QWidget *pwidget,
                 WidgetType type)
 {
-    BovineNodeMapping *pme = BovineTree::add(path, propertyName, (void*)nullptr);
+    WidgetContainer* wc = new WidgetContainer(pwidget, type);
+    BovineNodeMapping *pme = BovineTree::add(path, propertyName, wc);
     widget2pathMap[pwidget] = pme;
 }
 
@@ -39,14 +59,8 @@ BovineNode* DeviceTree::findByPropValue(QString &propval)
     return nullptr;
 }
 
-DeviceNodeMapping *DeviceTree::find(QString propPath)
-{
-    if (!prop2pathMap.contains(propPath))
-        return nullptr;
-    return &prop2pathMap[propPath];
-}
 
-DeviceNodeMapping *DeviceTree::find(QWidget *widget)
+BovineNodeMapping *DeviceTree::find(QWidget *widget)
 {
     if (!widget2pathMap.contains(widget))
         return nullptr;
@@ -61,7 +75,7 @@ void DeviceTree::printEntries()
 }
 
 
-QHash<QWidget *, DeviceNodeMapping *> DeviceTree::getWidget2pathMap() const
+QHash<QWidget *, BovineNodeMapping *> DeviceTree::getWidget2pathMap() const
 {
     return widget2pathMap;
 }

@@ -39,7 +39,9 @@ SOURCES += \
     presetmap.cpp \
     devicetree.cpp \
     bovinenodemapping.cpp \
-    bovinetree.cpp
+    bovinetree.cpp \
+    widgetcontainer.cpp \
+    presettree.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,7 +54,9 @@ HEADERS += \
     presetmap.h \
     devicetree.h \
     bovinenodemapping.h \
-    bovinetree.h
+    bovinetree.h \
+    widgetcontainer.h \
+    presettree.h
 
 FORMS += \
         mainwindow.ui \

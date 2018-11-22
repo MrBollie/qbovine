@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(api, SIGNAL(updateWidget(QWidget*, WidgetType, QVariant*)), this,
             SLOT(on_update_widget(QWidget*, WidgetType, QVariant*)));
 
-    api->addDevicePath("/devices/0123456789abcdef0123456789abcdef/",
+    api->addDevicePath("/devices/0123456789abcdef0123456789abcdef",
                        "preset_name", ui->leCurrentPreset, LINE_EDIT);
 
     // Cabinet

@@ -29,9 +29,6 @@ public:
 
     void setProperty(QString name, QVariant val);
 
-    void *getUserdata() const;
-    void setUserdata(void *value);
-
 private:
     BovineTree *pathMap;
     BovineNode *parent;

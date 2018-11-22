@@ -12,6 +12,7 @@
 #include <QSlider>
 
 #include "devicetree.h"
+#include "presettree.h"
 #include "mdnslookup.h"
 
 
@@ -33,7 +34,7 @@ public:
     BovineNode *getDevicePresets(const QString &folderUID);
 
     void loadDevicePreset(const QString &uid);
-    DeviceTree *getPresetPathMap() const;
+    PresetTree *getPresetPathMap() const;
     DeviceTree *getDevicePathMap() const;
     void selectComboBox(QComboBox *cb, int index);
     void setPushButton(QPushButton *pb, bool checked);
@@ -65,7 +66,7 @@ private:
     unsigned int msgIdConf;
     unsigned int msgIdDev;
 
-    DeviceTree *presetPathMap;
+    PresetTree *presetPathMap;
     QHash<QString, BovineNode*>* uid2PresetMap;
 
     QWebSocket webSocketConf;

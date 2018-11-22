@@ -11,7 +11,8 @@ BovineAPI::BovineAPI() :
     msgIdConf = 2000;
     msgIdDev = 0;
     devicePathMap = new DeviceTree();
-    presetPathMap = new DeviceTree();
+    devicePathMap->foo();
+    presetPathMap = new PresetTree();
     uid2PresetMap = new QHash<QString, BovineNode*>;
     mdns = new MDNSLookup();
 
@@ -196,11 +197,11 @@ void BovineAPI::onWSConfTextMessageReceived(const QString &message) {
           && jsonObject["data"].isString()) {
         QString uid = jsonObject["data"].toString();
         qDebug() << "PRESET UID: " << uid;
-        BovineNode* n = presetPathMap->findByPropValue(uid);
+        /*BovineNode* n = presetPathMap->findByPropValue(uid);
         if (n)
-            qDebug() << "PRESET NAME: " << n->getProperty("name")->toString();
+            qDebug() << "PRESET NAME: " << n->getProperty("name")->toString();*/
     }
-    else if (jsonObject["path"].toString() == "/devices") {
+    else if (jsonObject["path"].toString().startsWith("/devices")) {
         parseDevicePath(jsonObject);
     }
     else if (jsonObject["path"].toString() == "/presets"
@@ -309,7 +310,7 @@ void BovineAPI::onWSDevTextMessageReceived(const QString &message) {
 
 
 
-DeviceTree *BovineAPI::getPresetPathMap() const
+PresetTree *BovineAPI::getPresetPathMap() const
 {
     return presetPathMap;
 }
@@ -371,8 +372,8 @@ bool BovineAPI::parseDevicePath(QJsonObject &obj)
             QHash<QWidget*, BovineNodeMapping*> wmaps =
                     devicePathMap->getWidget2pathMap();
             foreach(QWidget* w, wmaps.keys()) {
-                emit updateWidget(w, wmaps[w]->getWtype(),
-                                  wmaps[w]->getValue());
+                WidgetContainer* wc = (WidgetContainer*)wmaps[w]->getUserdata();
+                emit updateWidget(w, wc->getType(), wmaps[w]->getValue());
             }
         }
     }
@@ -383,11 +384,11 @@ bool BovineAPI::parseDevicePath(QJsonObject &obj)
             BovineNodeMapping *bme = devicePathMap->find(path);
             if (bme) {
                 bme->updateValue(obj["data"].toVariant());
-                QWidget* w = bme->getWidget();
+                WidgetContainer* wc = (WidgetContainer*)bme->getUserdata();
                 // Tell the UI to update its stuff
-                if (w) {
-                    WidgetType wt = bme->getWtype();
-                    emit updateWidget(w, wt, bme->getValue());
+                if (wc) {
+                    WidgetType wt = wc->getType();
+                    emit updateWidget(wc->getWidget(), wt, bme->getValue());
                 }
             }
         }
@@ -502,7 +503,7 @@ void BovineAPI::setPushButton(QPushButton* pb, bool checked) {
  * This does a reverse lookup of the path and sends the command via websocket.
  */
 void BovineAPI::setSlider(QSlider* sl, int value) {
-    DeviceNodeMapping *pme = devicePathMap->find(sl);
+    BovineNodeMapping *pme = devicePathMap->find(sl);
     if (!pme)
         return;
 
@@ -538,7 +539,7 @@ void BovineAPI::setSlider(QSlider* sl, int value) {
  */
 void BovineAPI::setDial(QDial *dial, int value)
 {
-    DeviceNodeMapping *pme = devicePathMap->find(dial);
+    BovineNodeMapping *pme = devicePathMap->find(dial);
     if (!pme)
         return;
 

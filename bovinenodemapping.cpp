@@ -1,11 +1,19 @@
 #include "bovinenodemapping.h"
 
 BovineNodeMapping::BovineNodeMapping() :
+    node(nullptr),
     userdata(nullptr)
 {
 
 }
 
+
+/**
+ * @brief BovineNodeMapping::BovineNodeMapping
+ * @param path path that is being used for this mapping
+ * @param propname property name that is being used
+ * @param userdata Whatever you wanna remember along with this mapping
+ */
 BovineNodeMapping::BovineNodeMapping(const QString &path,
                                      const QString &propname,
                                      void *userdata) :
@@ -16,7 +24,15 @@ BovineNodeMapping::BovineNodeMapping(const QString &path,
     this->userdata = userdata;
 }
 
-BovineNodeMapping::BovineNodeMapping(BovineNode *node, QString propName) {
+
+/**
+ * @brief BovineNodeMapping::BovineNodeMapping
+ * @param node Node to be added. It's full path will be extracted
+ * @param propName property name
+ */
+BovineNodeMapping::BovineNodeMapping(BovineNode *node, QString propName) :
+    userdata(nullptr)
+{
     this->node = node;
     this->path = node->getFullPath();
     this->propName = propName;
