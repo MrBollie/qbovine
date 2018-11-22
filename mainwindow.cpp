@@ -27,6 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     api->addDevicePath("/devices/0123456789abcdef0123456789abcdef",
                        "preset_name", ui->leCurrentPreset, LINE_EDIT);
 
+    //Master
+    addDevPathBusMixer("master", "gain", ui->vsMasterGain, SLIDER);
+    addDevPathBusMixer("master", "gain", ui->leMasterGain, LINE_EDIT);
+
     // Cabinet
     addDevPathInput("cabinet", ui->cbCab, COMBO);
     addDevPathInput("breakup", ui->vsCabSpeakerBreakup, SLIDER);
@@ -994,6 +998,30 @@ void MainWindow::addDevPathInput(const QString &control, QWidget *widget,
 
     api->addDevicePath(path, propertyName, widget, wtype);
 }
+/**
+ * @brief MainWindow::addDevPathBusMixer
+ * @param channel Channel name on the mixer
+ * @param control Type of control
+ * @param widget Widget to map
+ * @param wtype Type of widget
+ * @details Helper function to map a widget to a mixer device path
+ */
+void MainWindow::addDevPathBusMixer(const QString &channel,
+                                    const QString &control,
+                                    QWidget *widget,
+                                    WidgetType wtype)
+{
+    QString path = QString(
+        "/devices/0123456789abcdef0123456789abcdef/mixers/0/buses/%1/"
+        "controls/%2"
+    ).arg(channel, control);
+
+    QString propertyName = widgetType2propertyName(wtype);
+
+    api->addDevicePath(path, propertyName, widget, wtype);
+}
+
+
 
 
 /**
@@ -1278,4 +1306,9 @@ void MainWindow::on_update_widget(QWidget* widget, WidgetType wtype,
             break;
         }
     }
+}
+
+void MainWindow::on_vsMasterGain_valueChanged(int value)
+{
+    api->setSlider(ui->vsMasterGain, value);
 }

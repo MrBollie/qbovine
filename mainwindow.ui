@@ -266,6 +266,9 @@ AXIS</string>
           <property name="checkable">
            <bool>true</bool>
           </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -274,6 +277,9 @@ AXIS</string>
            <string>100W</string>
           </property>
           <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
            <bool>true</bool>
           </property>
          </widget>
@@ -528,7 +534,7 @@ AXIS</string>
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbMic2_3">
+     <widget class="QGroupBox" name="gbMaster">
       <property name="geometry">
        <rect>
         <x>550</x>
@@ -559,7 +565,7 @@ AXIS</string>
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QSlider" name="vsMic2Vol_5">
+      <widget class="QSlider" name="vsMasterGain">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -630,6 +636,27 @@ AXIS</string>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="leMasterGain">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>350</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>

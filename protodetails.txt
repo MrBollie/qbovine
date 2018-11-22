@@ -59,3 +59,6 @@ UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"level
 set /presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/bda47e33bb844588b5519d08f16e1f0c/name/value/?cmd_id=set_command&message_id=228 "Bollie Blackface"
 post /presets/devices/hegel/delete?message_id=373 {"uid":"a6b695e09143476cb07869e6a57f7438"}
 get /presets/devices/hegel/folders?levels=4&flatvalue=1&cmd_id=get_presets&cmd_id_param=device
+
+"{\"path\":\"/presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/664b110b8c90433190974c058fcc2ad5\",\"operation\":\"added\"}"
+{\"path\":\"/presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/664b110b8c90433190974c058fcc2ad5\",\"operation\":\"removed\"}

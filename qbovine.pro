@@ -36,7 +36,6 @@ SOURCES += \
     bovinenode.cpp \
     mdnslookup.cpp \
     dialogname.cpp \
-    presetmap.cpp \
     devicetree.cpp \
     bovinenodemapping.cpp \
     bovinetree.cpp \
@@ -51,7 +50,6 @@ HEADERS += \
     bovinenode.h \
     mdnslookup.h \
     dialogname.h \
-    presetmap.h \
     devicetree.h \
     bovinenodemapping.h \
     bovinetree.h \

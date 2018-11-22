@@ -301,6 +301,8 @@ private slots:
     void on_vsRoomMicGain_valueChanged(int value);
 
     void on_update_widget(QWidget *widget, WidgetType wtype, QVariant *val);
+    void on_vsMasterGain_valueChanged(int value);
+
 private:
     void addDevPathInput(const QString &control, QWidget *widget,
                          WidgetType wtype);
@@ -318,6 +320,8 @@ private:
     void addDevPathBusFX(const QString &channel, int effect_id,
                          const QString &control, QWidget *widget,
                          WidgetType wtype);
+    void addDevPathBusMixer(const QString &channel, const QString &control,
+                            QWidget *widget, WidgetType wtype);
 };
 
 #endif // MAINWINDOW_H
