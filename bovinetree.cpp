@@ -1,6 +1,7 @@
 #include "bovinetree.h"
 
-BovineTree::BovineTree()
+BovineTree::BovineTree() :
+    rootNode(nullptr)
 {
 
 }

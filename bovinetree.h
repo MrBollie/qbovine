@@ -14,10 +14,9 @@ public:
     void add(BovineNode *node, QString prop);
 
     void readInitialTree(const QJsonObject &obj);
-private:
-    QHash<QString, BovineNodeMapping> prop2pathMap;
 
 protected:
+    QHash<QString, BovineNodeMapping> prop2pathMap;
     BovineNode* rootNode;
     QHash<QString, BovineNode*> pathMap;
 };
