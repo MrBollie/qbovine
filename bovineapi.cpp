@@ -69,6 +69,15 @@ BovineNode *BovineAPI::getDevicePresets(const QString &folderUID)
 
 
 /**
+ * @brief BovineAPI::getDevicePreset
+ * @param uid ID of the preset to load
+ */
+BovineNode *BovineAPI::getDevicePreset(const QString &uid)
+{
+
+}
+
+/**
  * @brief BovineAPI::loadDevicePreset
  * @param uid ID of the preset to load
  */

@@ -14,7 +14,8 @@ DialogPresets::DialogPresets(QWidget *parent, BovineAPI *api) :
 
     if (pre_folders != nullptr) {
         foreach(BovineNode* n, *pre_folders->getChildren()) {
-            QListWidgetItem *item = new QListWidgetItem(n->getProperty("name")->toString());
+            QListWidgetItem *item = new QListWidgetItem(
+                        n->getProperty("name")->toString());
             item->setData(Qt::UserRole, n->getPath());
             ui->lwFolder->addItem(item);
         }
@@ -25,12 +26,30 @@ DialogPresets::DialogPresets(QWidget *parent, BovineAPI *api) :
 
     ui->pbPresetDelete->setEnabled(false);
     ui->pbPresetFavorite->setEnabled(false);
+    ui->pbPresetRename->setEnabled(false);
     ui->pbPresetSave->setEnabled(false);
     ui->pbPresetSaveAs->setEnabled(false);
 
 }
 
+/**
+ * @brief DialogPresets::DialogPresets
+ * @param parent Parent window
+ * @param api pointer to the API layer
+ * @param fxid ID of the FX to show presets for
+ * @details This constructor can be used for FX presets.
+ */
+DialogPresets::DialogPresets(QWidget *parent, BovineAPI *api, const int &fxid) :
+    QDialog(parent),
+    ui(new Ui::DialogPresets)
+{
+    ui->setupUi(this);
+    this->api = api;
+}
 
+/**
+ * @brief DialogPresets::~DialogPresets
+ */
 DialogPresets::~DialogPresets()
 {
     delete ui;
@@ -94,4 +113,44 @@ void DialogPresets::on_lwPreset_itemClicked(QListWidgetItem *item)
 void DialogPresets::on_pbClose_clicked()
 {
     close();
+}
+
+void DialogPresets::on_pbFolderNew_clicked()
+{
+
+}
+
+void DialogPresets::on_pbFolderRename_clicked()
+{
+
+}
+
+void DialogPresets::on_pbFolderDelete_clicked()
+{
+
+}
+
+void DialogPresets::on_pbPresetSaveAs_clicked()
+{
+
+}
+
+void DialogPresets::on_pbPresetSave_clicked()
+{
+
+}
+
+void DialogPresets::on_pbPresetRename_clicked()
+{
+
+}
+
+void DialogPresets::on_pbPresetDelete_clicked()
+{
+
+}
+
+void DialogPresets::on_pbPresetFavorite_clicked()
+{
+
 }
