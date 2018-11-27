@@ -74,7 +74,11 @@ BovineNode *BovineAPI::getDevicePresets(const QString &folderUID)
  */
 BovineNode *BovineAPI::getDevicePreset(const QString &uid)
 {
+    BovineNodeMapping *pme = presetPathMap->findByUID(uid);
+    if (pme)
+        return pme->getNode();
 
+    return nullptr;
 }
 
 /**

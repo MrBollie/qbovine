@@ -1,3 +1,49 @@
+Assignments
+-----------
+
+Changing assignment:
+set /devices/0123456789abcdef0123456789abcdef/banks/0/patches/5/preset_uid/value/?cmd_id=set_command&message_id=1318 "3d4c9671945f40129e9ef0674f221907"
+
+
+
+Presets
+-------
+SAVE AS:
+post /presets/devices/hegel/save_as?message_id=118 {"uid":"0123456789abcdef0123456789abcdef","name":"Bollie Fender","folder_uid":"c08e35d9a668493db84136a9d81684f5"}
+
+Rename:
+set /presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/bda47e33bb844588b5519d08f16e1f0c/name/value/?cmd_id=set_command&message_id=228 "Bollie Blackface"
+
+Favorite:
+set /presets/devices/hegel/folders/c08e35d9a668493db84136a9d81684f5/presets/d60b1621b6a54823ab51e7d21b332539/favorite/value/?cmd_id=set_command&message_id=256 true
+
+Save:
+post /presets/devices/hegel/save?cmd_id=save&message_id=270 {"uid":"0123456789abcdef0123456789abcdef","preset_uid":"d60b1621b6a54823ab51e7d21b332539"}
+
+Delete Preset:
+post /presets/devices/hegel/delete?message_id=393 {"uid":"d60b1621b6a54823ab51e7d21b332539"}
+
+Move PReset to other folder:
+post /presets/devices/hegel/move?message_id=516 {"uid":"948dc23b5d3741e1b868e778b6630212","folder_uid":"c08e35d9a668493db84136a9d81684f5"}
+
+Delete Folder:
+post /presets/devices/hegel/folders/delete?message_id=638 {"uid":"c08e35d9a668493db84136a9d81684f5"}
+
+New Folder:
+post /presets/devices/hegel/folders/new?message_id=783 {"name":"Bollie"}
+
+Rename Folder:
+set /presets/devices/hegel/folders/ebd138864d8e4a2187ce3263eab43b75/name/value/?cmd_id=set_command&message_id=903 "Bollie's Presets"
+
+
+Scratchpad
+----------
+post /presets/devices/hegel/delete?message_id=373 {"uid":"a6b695e09143476cb07869e6a57f7438"}
+get /presets/devices/hegel/folders?levels=4&flatvalue=1&cmd_id=get_presets&cmd_id_param=device
+
+"{\"path\":\"/presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/664b110b8c90433190974c058fcc2ad5\",\"operation\":\"added\"}"
+{\"path\":\"/presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/664b110b8c90433190974c058fcc2ad5\",\"operation\":\"removed\"}
+
 Port 4718
 
 get /status?cmd_id=heartbeat&&message_id=0
@@ -28,37 +74,3 @@ get /update/ota?flatvalue=1&commands=0&cmd_id=cmd_id_get_all_updates&recursive=1
 subscribe /update/ota?recursive=1&cmd_id=cmd_id_subscribe_to_updates&message_id=8
 post /update/ota/checker_init?cmd_id=cmd_id_post_init_checker&message_id=9 {}
 get /update/ota?flatvalue=1&commands=0&cmd_id=cmd_id_get_all_updates&recursive=1&message_id=10
-
-Adding new preset folder:
-post /presets/devices/hegel/folders/new?message_id=345 {"name":"Bollie"}
-
-Changing assignment:
-set /devices/0123456789abcdef0123456789abcdef/banks/0/patches/5/preset_uid/value/?cmd_id=set_command&message_id=1318 "3d4c9671945f40129e9ef0674f221907"
-
-
-UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[0,4,5,6,7],\"values\":[0.009307168424129486,0.06519273668527603,0.09037139266729355,0.6666449904441834,0.00021727719285991043]},\"peaks\":{\"meter_indexes\":[4,5],\"values\":[0.01881502941250801,0.013139056041836739]}}}"
-UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[0,4,5,6,7],\"values\":[0.0036150452215224506,0.05963612720370293,0.08481481671333313,0.6666474938392639,0.00019090274872723967]},\"peaks\":{\"meter_indexes\":[4,5],\"values\":[0.0,0.03439890965819359]}}}"
-UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[0,4,5,6,7],\"values\":[0.0,0.05394401028752327,0.0791226401925087,0.6666499376296997,0.00016711179341655225]},\"peaks\":{\"meter_indexes\":[5],\"values\":[0.015727650374174119]}}}"
-UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,6,7],\"values\":[0.04838740453124046,0.07356604188680649,0.6666524410247803,0.00015936337877064943]},\"peaks\":{\"meter_indexes\":[5],\"values\":[0.0]}}}"
-UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,6,7],\"values\":[0.04269525781273842,0.06787387281656265,0.6666548848152161,0.00015133662964217365]}}}"
-UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,6,7],\"values\":[0.03713865578174591,0.062317270785570148,0.6666563153266907,0.00013260483683552593]}}}"
-UNHANDLED RESPONSE:  "{\"path\":\"/meters/meter_values/value\",\"data\":{\"levels\":{\"meter_indexes\":[4,5,7],\"values\":[0.03144648298621178,0.0566251203417778,0.00012747469008900225]}}}"
-
-
-
-
-/**
-
-    /*
-     *
-     * #define DEVICE_INPUT_CONTROL "/devices/0123456789abcdef0123456789abcdef/device/inputs/cabinet_mic_room/effects/0/controls"
-#define DEVICE_MIXER_CONTROL "/devices/0123456789abcdef0123456789abcdef/mixers/0/channels"
-#define DEVICE_BUS_CONTROL "/devices/0123456789abcdef0123456789abcdef/mixers/0/buses"
-*/
-
-set /presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/bda47e33bb844588b5519d08f16e1f0c/name/value/?cmd_id=set_command&message_id=228 "Bollie Blackface"
-post /presets/devices/hegel/delete?message_id=373 {"uid":"a6b695e09143476cb07869e6a57f7438"}
-get /presets/devices/hegel/folders?levels=4&flatvalue=1&cmd_id=get_presets&cmd_id_param=device
-
-"{\"path\":\"/presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/664b110b8c90433190974c058fcc2ad5\",\"operation\":\"added\"}"
-{\"path\":\"/presets/devices/hegel/folders/9eb65991996b4b15a6a9b9600333ecfa/presets/664b110b8c90433190974c058fcc2ad5\",\"operation\":\"removed\"}

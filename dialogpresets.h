@@ -42,9 +42,12 @@ private slots:
 
     void on_pbPresetFavorite_clicked();
 
+    void on_pbLoad_clicked();
+
 private:
     Ui::DialogPresets *ui;
     BovineAPI *api;
+    BovineNode *selectedPreset;
 };
 
 #endif // DIALOGPRESETS_H

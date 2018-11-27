@@ -44,6 +44,7 @@ public:
                        WidgetType type);
     void connectToDevice();
 
+    BovineNode *getDevicePreset(const QString &uid);
 private slots:
     QString getClientUuid();
     void onWSConfClosed();

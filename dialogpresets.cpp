@@ -5,7 +5,8 @@
 
 DialogPresets::DialogPresets(QWidget *parent, BovineAPI *api) :
     QDialog(parent),
-    ui(new Ui::DialogPresets)
+    ui(new Ui::DialogPresets),
+    selectedPreset(nullptr)
 {
     ui->setupUi(this);
     this->api = api;
@@ -64,6 +65,7 @@ DialogPresets::~DialogPresets()
 void DialogPresets::on_lwFolder_itemClicked(QListWidgetItem *item)
 {
     ui->lwPreset->reset();
+    selectedPreset = nullptr;
     while (ui->lwPreset->count() > 0) {
         QListWidgetItem* i = ui->lwPreset->takeItem(0);
         delete i;
@@ -102,12 +104,36 @@ void DialogPresets::on_lwFolder_itemClicked(QListWidgetItem *item)
 
 void DialogPresets::on_lwPreset_itemClicked(QListWidgetItem *item)
 {
-    api->loadDevicePreset(item->data(Qt::UserRole).toString());
-    // Enable all preset buttons
-    ui->pbPresetDelete->setEnabled(true);
-    ui->pbPresetFavorite->setEnabled(true);
-    ui->pbPresetSave->setEnabled(true);
-    ui->pbPresetSaveAs->setEnabled(true);
+    QString uid = item->data(Qt::UserRole).toString();
+    BovineNode *n = api->getDevicePreset(uid);
+    selectedPreset = n;
+    if (n) {
+        ui->pbPresetFavorite->setEnabled(true);
+        QVariant* fav = n->getProperty("favorite");
+        QVariant* factory = n->getProperty("factory");
+
+        if (!factory || !factory->toBool()) {
+            ui->pbPresetSave->setEnabled(true);
+            ui->pbPresetDelete->setEnabled(true);
+        }
+        else {
+            ui->pbPresetRename->setEnabled(true);
+            ui->pbPresetSave->setEnabled(false);
+            ui->pbPresetDelete->setEnabled(false);
+        }
+
+        if (fav && fav->toBool()) {
+            ui->pbPresetFavorite->setEnabled(true);
+        }
+        ui->pbPresetSaveAs->setEnabled(true);
+    }
+    else {
+        // Enable all preset buttons
+        ui->pbPresetDelete->setEnabled(false);
+        ui->pbPresetSave->setEnabled(false);
+        ui->pbPresetFavorite->setEnabled(false);
+        ui->pbPresetSaveAs->setEnabled(true);
+    }
 }
 
 void DialogPresets::on_pbClose_clicked()
@@ -153,4 +179,13 @@ void DialogPresets::on_pbPresetDelete_clicked()
 void DialogPresets::on_pbPresetFavorite_clicked()
 {
 
+}
+
+void DialogPresets::on_pbLoad_clicked()
+{
+    if (selectedPreset) {
+        QVariant *uid = selectedPreset->getProperty("uid");
+        if (uid)
+            api->loadDevicePreset(uid->toString());
+    }
 }
