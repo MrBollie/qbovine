@@ -12,3 +12,8 @@ DialogName::~DialogName()
 {
     delete ui;
 }
+
+void DialogName::on_buttonBox_accepted()
+{
+
+}

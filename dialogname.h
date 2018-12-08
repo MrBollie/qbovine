@@ -15,6 +15,9 @@ public:
     explicit DialogName(QWidget *parent = nullptr);
     ~DialogName();
 
+private slots:
+    void on_buttonBox_accepted();
+    
 private:
     Ui::DialogName *ui;
 };

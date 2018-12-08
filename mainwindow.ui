@@ -19,6 +19,13 @@
   <property name="windowTitle">
    <string>qBovine</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #331a00;
+color: #efefef;
+QSlider::handle {
+background-color: #efefef;
+}</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="twMain">
     <property name="geometry">
